@@ -26,4 +26,4 @@ jobs:
           git commit -m "Add new_file.txt created by GitHub Action"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
