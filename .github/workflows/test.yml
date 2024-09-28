@@ -1,4 +1,4 @@
-name: Create New Files
+name: Create New Files from JSON
 
 on:
   push:
@@ -14,27 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create HTML files from JSON
-        run: |
-          # Read the JSON file and generate HTML files
-          jq -c '.[]' news.json | while IFS= read -r item; do
-            title=$(echo "$item" | jq -r '.title')
-            command=$(echo "$item" | jq -r '.command')
+      - name: Install jq
+        run: sudo apt-get install jq
 
-            # Create the HTML file using the template
-            cat <<EOF > "${title// /_}.html"
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>$title</title>
-            </head>
-            <body>
-                <h1>$command</h1>
-            </body>
-            </html>
-            EOF
+      - name: Generate HTML files
+        run: |
+          # Read JSON file and loop through each item
+          for row in $(jq -c '.[]' news.json); do
+              filename=$(echo $row | jq -r '.filename')
+              title=$(echo $row | jq -r '.title')
+              command=$(echo $row | jq -r '.command')
+
+              # Create HTML file using the template
+              sed -e "s/{{title}}/$title/g" -e "s/{{command}}/$command/g" template.html > "$filename"
           done
 
       - name: Commit and push changes
@@ -42,7 +34,7 @@ jobs:
           git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
           git add *.html
-          git commit -m "Add generated HTML files from news.json"
+          git commit -m "Add new HTML files generated from JSON"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

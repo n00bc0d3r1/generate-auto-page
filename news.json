@@ -1,13 +1,16 @@
 [
     {
+        "filename": "hello1.html",
         "title": "Start Nginx Service",
         "command": "sudo systemctl start nginx"
     },
     {
+        "filename": "hello2.html",
         "title": "Check Disk Usage",
         "command": "df -h"
     },
     {
+        "filename": "hello3.html",
         "title": "List Running Processes",
         "command": "ps aux"
     }
