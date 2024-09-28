@@ -5,7 +5,12 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+    inputs:
+      generate_html:
+        description: 'Generate HTML files from JSON'
+        required: true
+        default: 'yes'
+        
 jobs:
   generate-html:
     runs-on: ubuntu-latest
