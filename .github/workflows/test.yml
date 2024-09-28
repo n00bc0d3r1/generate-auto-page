@@ -55,7 +55,7 @@ jobs:
         run: |
           git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
-          git add generated_html/*
+          git add *.html
           git commit -m "Generated HTML files from JSON"
           git push
         env:
