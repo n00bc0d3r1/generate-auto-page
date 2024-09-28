@@ -1,0 +1,29 @@
+name: Create New File
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  create-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create a new file
+        run: |
+          echo "This is a new file created by GitHub Action" > new_file.txt
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "n00bc0d3r1"
+          git config --global user.email "darktechdenny123@gmail.com"
+          git add new_file.txt
+          git commit -m "Add new_file.txt created by GitHub Action"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} 
