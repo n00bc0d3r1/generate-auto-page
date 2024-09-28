@@ -51,19 +51,12 @@ jobs:
                 template.html > "$filename"
           done
 
-      - name: Enable debug logging
-        run: |
-          echo "GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}"  # Ensure this does not expose your token
-          git remote -v  # Check remotes
-          git status  # Check the status of the git repository
-          
       - name: Commit and push changes
         run: |
-          git remote add new-repo https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/n00bc0d3r1/show-page.git
           git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
           git add *.html
           git commit -m "Generated HTML files from JSON"
-          git push new-repo main
+          git push
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
