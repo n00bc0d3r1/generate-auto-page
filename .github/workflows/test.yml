@@ -48,7 +48,7 @@ jobs:
                 -e "s/{{meta-source}}/$meta_source/g" \
                 -e "s|{{image-logo}}|$image_logo|g" \
                 -e "s|{{livechat-url}}|$livechat_url|g" \
-                template.html > "generated_html/$filename"
+                template.html > "$filename"
           done
 
       - name: Commit and push changes
