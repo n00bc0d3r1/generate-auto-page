@@ -53,11 +53,11 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git remote add new-repo https://github.com/n00bc0d3r1/show-page.git
+          git remote add new-repo https://github.com/n00bc0d3r1/show-page2.git
           git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
           git add *.html
           git commit -m "Generated HTML files from JSON"
-          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/n00bc0d3r1/show-page.git main
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/n00bc0d3r1/show-page2.git main
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
