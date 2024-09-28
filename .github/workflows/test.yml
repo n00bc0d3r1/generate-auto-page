@@ -20,10 +20,10 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name "DennyeLO"
+          git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
           git add new_file.txt
           git commit -m "Add new_file.txt created by GitHub Action"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
