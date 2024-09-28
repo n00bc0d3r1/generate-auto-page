@@ -10,33 +10,5 @@
     {
         "title": "List Running Processes",
         "command": "ps aux"
-    },
-    {
-        "title": "Move All Files",
-        "command": "mv /source/* /destination/"
-    },
-    {
-        "title": "Check Memory Usage",
-        "command": "free -m"
-    },
-    {
-        "title": "Show Open Ports",
-        "command": "sudo netstat -tuln"
-    },
-    {
-        "title": "Remove Directory",
-        "command": "rm -rf /path/to/directory"
-    },
-    {
-        "title": "List Installed Packages",
-        "command": "dpkg --list"
-    },
-    {
-        "title": "Show Current Directory",
-        "command": "pwd"
-    },
-    {
-        "title": "Update Package List",
-        "command": "sudo apt update"
     }
 ]

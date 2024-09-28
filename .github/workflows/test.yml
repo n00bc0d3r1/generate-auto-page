@@ -1,4 +1,4 @@
-name: Create New File
+name: Create New Files
 
 on:
   push:
@@ -7,23 +7,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  create-file:
+  create-files:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create a new file
+      - name: Create HTML files from JSON
         run: |
-          echo "This is a new file created by GitHub Action" > new_file.txt
+          # Read the JSON file and generate HTML files
+          jq -c '.[]' news.json | while IFS= read -r item; do
+            title=$(echo "$item" | jq -r '.title')
+            command=$(echo "$item" | jq -r '.command')
+
+            # Create the HTML file using the template
+            cat <<EOF > "${title// /_}.html"
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>$title</title>
+            </head>
+            <body>
+                <h1>$command</h1>
+            </body>
+            </html>
+            EOF
+          done
 
       - name: Commit and push changes
         run: |
           git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
-          git add new_file.txt
-          git commit -m "Add new_file.txt created by GitHub Action"
+          git add *.html
+          git commit -m "Add generated HTML files from news.json"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
