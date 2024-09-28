@@ -5,12 +5,7 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      generate_html:
-        description: 'Generate HTML files from JSON'
-        required: true
-        default: 'yes'
-        
+
 jobs:
   generate-html:
     runs-on: ubuntu-latest
@@ -62,6 +57,6 @@ jobs:
           git config --global user.email "darktechdenny123@gmail.com"
           git add *.html
           git commit -m "Generated HTML files from JSON"
-          git push
+          git push -f
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
