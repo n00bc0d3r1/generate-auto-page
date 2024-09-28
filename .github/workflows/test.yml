@@ -14,6 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Display news.json contents
+        run: cat news.json
+  
+      - name: Install jq
+        run: sudo apt-get install jq
+        
       - name: Generate HTML files
         run: |
           # Create a directory to store the HTML files
@@ -26,12 +32,13 @@ jobs:
           
           # Loop through each item in the dynamic array and create an HTML file
           echo "$json_data" | jq -c '.[0].dynamic[]' | while read -r item; do
-            filename=$(echo "$item" | jq -r '.filename')
-            title=$(echo "$item" | jq -r '.title')
-            meta_description=$(echo "$item" | jq -r '.meta-description')
-            meta_source=$(echo "$item" | jq -r '.meta-source')
-            image_logo=$(echo "$item" | jq -r '.image-logo')
-            livechat_url=$(echo "$item" | jq -r '.livechat-url')
+              filename=$(echo "$item" | jq -r '.filename')
+              title=$(echo "$item" | jq -r '.title')
+              meta_description=$(echo "$item" | jq -r '.["meta-description"]') # Use brackets for keys with hyphens
+              meta_source=$(echo "$item" | jq -r '.meta-source')
+              image_logo=$(echo "$item" | jq -r '.["image-logo"]') # Use brackets for keys with hyphens
+              livechat_url=$(echo "$item" | jq -r '.["livechat-url"]') # Use brackets for keys with hyphens
+
 
             # Use the template to create the HTML file
             sed -e "s/{{title}}/$title/g" \
