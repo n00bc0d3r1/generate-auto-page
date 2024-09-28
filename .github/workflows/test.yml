@@ -53,6 +53,7 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          git remote add new-repo https://github.com/n00bc0d3r1/show-page.git
           git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
           git add *.html
