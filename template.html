@@ -1,11 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="id" amp i-amphtml-binding i-amphtml-layout i-amphtml-no-boilerplate transformed="self;v=1"
+    itemscope="itemscope" itemtype="https://schema.org/WebPage">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>{{title}}</title>
+    <meta name="description" content="{{meta-description}}" />
+    <link itemprop="mainEntityOfPage" rel="canonical"
+        href="https://{{account}}.github.io/{{repository}}/{{filename}}" />
+
 </head>
+
 <body>
-    <h1>{{command}}</h1>
+    <div class="logo-container">
+        <a href="https://{{account}}.github.io/{{repository}}/{{filename}}" class="logo">
+            <amp-img title="{{meta-source}}" layout="responsive" height="50" width="120"
+                src="{{image-logo}}"
+                alt="{{meta-source}}" noloading></amp-img>
+        </a>
+    </div>
+    <p id="breadcrumbs">
+        <span>
+            <span>
+                <p style="text-align: center;margin-top:-20px;">
+                    <a href="https://{{account}}.github.io/{{repository}}/{{filename}}">Home</a>
+                    &#187; <a id="link_bonus_vip">Bonus VIP</a> &#187; <strong class="breadcrumb_last"
+                        aria-current="page"><a id="link_pola_gacor">Pola Gacor Hari Ini</a></strong>
+                </p>
+            </span>
+        </span>
+    </p>
+    <h1>{{title}}</h1>
+    <a href="{{livechat-url}}" target="_blank" class="js_live_chat_link live-chat-link">
+        <amp-img class="live-chat-icon" layout="intrinsic" height="75" width="75"
+            src="https://res.cloudinary.com/dak0kqjx3/image/upload/v1727246014/livechat_dhmswk.webp"
+            alt="livechat"></amp-img>
+        LIVE CHAT
+    </a>
+    <div class="copyright">
+        <div>
+            <strong>Copyright <a href="https://{{account}}.github.io/{{repository}}/{{filename}}">{{meta-source}}</a>
+                ©2024</strong><br />
+        </div>
+    </div>
 </body>
+
 </html>

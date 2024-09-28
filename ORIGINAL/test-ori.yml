@@ -1,0 +1,42 @@
+name: Create New Files from JSON
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  create-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Display news.json contents
+        run: cat news.json
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Generate HTML files
+        run: |
+          jq -c '.[]' news.json | while read row; do
+              filename=$(echo $row | jq -r '.filename')
+              title=$(echo $row | jq -r '.title')
+              command=$(echo $row | jq -r '.command')
+
+              # Create HTML file using the template
+              sed -e "s/{{title}}/$title/g" -e "s/{{command}}/$command/g" template.html > "$filename"
+          done
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "n00bc0d3r1"
+          git config --global user.email "darktechdenny123@gmail.com"
+          git add *.html
+          git commit -m "Add new HTML files generated from JSON"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

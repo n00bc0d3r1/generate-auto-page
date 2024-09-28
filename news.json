@@ -1,17 +1,32 @@
 [
     {
-        "filename": "hello1.html",
-        "title": "Start Nginx Service",
-        "command": "sudo systemctl start nginx"
-    },
-    {
-        "filename": "hello2.html",
-        "title": "Check Disk Usage",
-        "command": "df -h"
-    },
-    {
-        "filename": "hello3.html",
-        "title": "List Running Processes",
-        "command": "ps aux"
+        "account": "n00bc0d3r1",
+        "repository": "generate-auto-page",
+        "dynamic": [
+            {
+                "filename": "hello1.html",
+                "title": "Node",
+                "meta-description": "Lorem ipsum.",
+                "meta-source": "Hello world",
+                "image-logo": "https://res.cloudinary.com/dak0kqjx3/image/upload/v1727245966/logo-bigwin123_yij6qf.webp",
+                "livechat-url": "https://direct.lc.chat/14027805/"
+            },
+            {
+                "filename": "hello2.html",
+                "title": "Node 2222",
+                "meta-description": "Lorem ipsum.",
+                "meta-source": "Hello world",
+                "image-logo": "https://res.cloudinary.com/dak0kqjx3/image/upload/v1727245966/logo-bigwin123_yij6qf.webp",
+                "livechat-url": "https://direct.lc.chat/14027805/"
+            },
+            {
+                "filename": "hello3.html",
+                "title": "Node 3333",
+                "meta-description": "Lorem ipsum.",
+                "meta-source": "Hello world",
+                "image-logo": "https://res.cloudinary.com/dak0kqjx3/image/upload/v1727245966/logo-bigwin123_yij6qf.webp",
+                "livechat-url": "https://direct.lc.chat/14027805/"
+            }
+        ]
     }
 ]

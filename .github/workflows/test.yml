@@ -1,4 +1,4 @@
-name: Create New Files from JSON
+name: Create HTML Files from JSON
 
 on:
   push:
@@ -7,36 +7,50 @@ on:
   workflow_dispatch:
 
 jobs:
-  create-files:
+  generate-html:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Display news.json contents
-        run: cat news.json
-
-      - name: Install jq
-        run: sudo apt-get install jq
-
       - name: Generate HTML files
         run: |
-          jq -c '.[]' news.json | while read row; do
-              filename=$(echo $row | jq -r '.filename')
-              title=$(echo $row | jq -r '.title')
-              command=$(echo $row | jq -r '.command')
+          # Create a directory to store the HTML files
+          mkdir -p generated_html
 
-              # Create HTML file using the template
-              sed -e "s/{{title}}/$title/g" -e "s/{{command}}/$command/g" template.html > "$filename"
+          # Read JSON data
+          json_data=$(cat news.json)
+          account=$(echo "$json_data" | jq -r '.[0].account')
+          repository=$(echo "$json_data" | jq -r '.[0].repository')
+          
+          # Loop through each item in the dynamic array and create an HTML file
+          echo "$json_data" | jq -c '.[0].dynamic[]' | while read -r item; do
+            filename=$(echo "$item" | jq -r '.filename')
+            title=$(echo "$item" | jq -r '.title')
+            meta_description=$(echo "$item" | jq -r '.meta-description')
+            meta_source=$(echo "$item" | jq -r '.meta-source')
+            image_logo=$(echo "$item" | jq -r '.image-logo')
+            livechat_url=$(echo "$item" | jq -r '.livechat-url')
+
+            # Use the template to create the HTML file
+            sed -e "s/{{title}}/$title/g" \
+                -e "s/{{meta-description}}/$meta_description/g" \
+                -e "s/{{account}}/$account/g" \
+                -e "s/{{repository}}/$repository/g" \
+                -e "s/{{filename}}/$filename/g" \
+                -e "s/{{meta-source}}/$meta_source/g" \
+                -e "s|{{image-logo}}|$image_logo|g" \
+                -e "s|{{livechat-url}}|$livechat_url|g" \
+                template.html > "generated_html/$filename"
           done
 
       - name: Commit and push changes
         run: |
           git config --global user.name "n00bc0d3r1"
           git config --global user.email "darktechdenny123@gmail.com"
-          git add *.html
-          git commit -m "Add new HTML files generated from JSON"
+          git add generated_html/*
+          git commit -m "Generated HTML files from JSON"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
