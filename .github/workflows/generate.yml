@@ -39,7 +39,7 @@ jobs:
           imageGif=$(echo "$json_data" | jq -r '.[0]["image-gif"]')
 
           escape_sed() {
-              echo "$1" | sed -e 's/[\/&]/\\&/g; s/[&]/\\&/g; s/[!]/\\!/g; s/[\"]/\\\"/g; s/\'/\\\'/g'
+              echo "$1" | sed -e 's/[\/&]/\\&/g'
           }
 
           # Check if templateType is not empty
@@ -62,29 +62,29 @@ jobs:
           echo "$json_data" | jq -c '.[0].dynamic[]' | while read -r item; do
               filename=$(echo "$item" | jq -r '.filename')
               title=$(echo "$item" | jq -r '.title')
-              meta_description=$(echo "$item" | jq -r '.["meta-description"]')
-              image_banner=$(echo "$item" | jq -r '.["image-banner"]')
+              meta_description=$(echo "$item" | jq -r '.["meta-description"]') # Use brackets for keys with hyphens
+              image_banner=$(echo "$item" | jq -r '.["image-banner"]') # Use brackets for keys with hyphens
               content=$(echo "$item" | jq -r '.content')
 
-              # Escape the content for sed
-              escaped_content=$(escape_sed "$content")
-              
-              # Use the template to create the HTML file
-              sed -e "s|{{title}}|$title|g" \
-                  -e "s|{{meta-description}}|$meta_description|g" \
-                  -e "s|{{account}}|$account|g" \
-                  -e "s|{{repository}}|$repository|g" \
-                  -e "s|{{domainUrl}}|$domainUrl|g" \
-                  -e "s|{{filename}}|$filename|g" \
-                  -e "s|{{metaSource}}|$metaSource|g" \
-                  -e "s|{{imageLogo}}|$imageLogo|g" \
-                  -e "s|{{image-banner}}|$image_banner|g" \
-                  -e "s|{{liveChatUrl}}|$liveChatUrl|g" \
-                  -e "s|{{content}}|$escaped_content|g" \
-                  -e "s|{{whitelabel}}|$whitelabel|g" \
-                  -e "s|{{referral}}|$referral|g" \
-                  -e "s|{{imageGif}}|$imageGif|g" \
-                  "$templateFile" > "$filename"
+            # Escape the content for sed
+            escaped_content=$(escape_sed "$content")
+            
+            # Use the template to create the HTML file
+            sed -e "s/{{title}}/$title/g" \
+                -e "s/{{meta-description}}/$meta_description/g" \
+                -e "s/{{account}}/$account/g" \
+                -e "s/{{repository}}/$repository/g" \
+                -e "s|{{domainUrl}}|$domainUrl|g" \
+                -e "s/{{filename}}/$filename/g" \
+                -e "s|{{metaSource}}|$metaSource|g" \
+                -e "s|{{imageLogo}}|$imageLogo|g" \
+                -e "s|{{image-banner}}|$image_banner|g" \
+                -e "s|{{liveChatUrl}}|$liveChatUrl|g" \
+                -e "s|{{content}}|$escaped_content|g" \
+                -e "s|{{whitelabel}}|$whitelabel|g" \
+                -e "s|{{referral}}|$referral|g" \
+                -e "s|{{imageGif}}|$imageGif|g" \
+                "$templateFile" > "$filename"
           done
 
       - name: Commit and push changes
