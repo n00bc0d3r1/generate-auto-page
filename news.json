@@ -2,30 +2,31 @@
     {
         "account": "n00bc0d3r1",
         "repository": "generate-auto-page",
+        "domain-url": "https://www.youtube.com/watch",
+        "referral": "?v=G3cz7_z2rxk",
+        "livechat-url": "https://www.youtube.com/watch?v=G3cz7_z2rxk",
+        "image-logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Logo_of_YouTube_%282013-2015%29.svg/1200px-Logo_of_YouTube_%282013-2015%29.svg.png",
+        "image-gif": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Logo_of_YouTube_%282013-2015%29.svg/1200px-Logo_of_YouTube_%282013-2015%29.svg.png",
+        "meta-source": "Youtube Watch",
+        "date": "2024-10-01 14:20",
+        "template": "2",
+        "whitelabel": "Youtube",
         "dynamic": [
             {
-                "filename": "hello1.html",
-                "title": "Node",
-                "meta-description": "Lorem ipsum.",
-                "meta-source": "Hello world",
-                "image-logo": "https://res.cloudinary.com/dak0kqjx3/image/upload/v1727245966/logo-bigwin123_yij6qf.webp",
-                "livechat-url": "https://direct.lc.chat/14027805/"
+                "no": 1,
+                "filename": "youtube-1.html",
+                "title": "You Are Not Suguru. - SoundTrack. (Slowed / 1 hour) | [ Jujutsu Kaisen Season 2 - EP9 ].",
+                "meta-description": "Youtube - You Are Not Suguru. - SoundTrack. (Slowed / 1 hour) | [ Jujutsu Kaisen Season 2 - EP9 ].",
+                "content": "Hello World",
+                "image-banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Logo_of_YouTube_%282013-2015%29.svg/1200px-Logo_of_YouTube_%282013-2015%29.svg.png"
             },
             {
-                "filename": "hello2.html",
-                "title": "Node 2222",
-                "meta-description": "Lorem ipsum.",
-                "meta-source": "Hello world",
-                "image-logo": "https://res.cloudinary.com/dak0kqjx3/image/upload/v1727245966/logo-bigwin123_yij6qf.webp",
-                "livechat-url": "https://direct.lc.chat/14027805/"
-            },
-            {
-                "filename": "hello3.html",
-                "title": "Node 3333",
-                "meta-description": "Lorem ipsum.",
-                "meta-source": "Hello world",
-                "image-logo": "https://res.cloudinary.com/dak0kqjx3/image/upload/v1727245966/logo-bigwin123_yij6qf.webp",
-                "livechat-url": "https://direct.lc.chat/14027805/"
+                "no": 2,
+                "filename": "youtube-2.html",
+                "title": "You Are Not Suguru. - SoundTrack. (Slowed / 1 hour) | [ Jujutsu Kaisen Season 2 - EP9 ].",
+                "meta-description": "Youtube - You Are Not Suguru. - SoundTrack. (Slowed / 1 hour) | [ Jujutsu Kaisen Season 2 - EP9 ].",
+                "content": "Hello World",
+                "image-banner": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Logo_of_YouTube_%282013-2015%29.svg/1200px-Logo_of_YouTube_%282013-2015%29.svg.png"
             }
         ]
     }

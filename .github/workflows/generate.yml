@@ -1,0 +1,106 @@
+name: Generate Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-html:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Display news.json contents
+        run: cat news.json
+  
+      - name: Install jq
+        run: sudo apt-get install jq
+        
+      - name: Generate HTML files
+        run: |
+          # Create a directory to store the HTML files
+          mkdir -p generated_html
+
+          # Read JSON data
+          json_data=$(cat news.json)
+          account=$(echo "$json_data" | jq -r '.[0].account')
+          repository=$(echo "$json_data" | jq -r '.[0].repository')
+          domainUrl=$(echo "$json_data" | jq -r '.[0]["domain-url"]')
+          liveChatUrl=$(echo "$json_data" | jq -r '.[0]["livechat-url"]')
+          imageLogo=$(echo "$json_data" | jq -r '.[0]["image-logo"]')
+          metaSource=$(echo "$json_data" | jq -r '.[0]["meta-source"]')
+          templateType=$(echo "$json_data" | jq -r '.[0].template')
+          whitelabel=$(echo "$json_data" | jq -r '.[0].whitelabel')
+          referral=$(echo "$json_data" | jq -r '.[0].referral')
+          imageGif=$(echo "$json_data" | jq -r '.[0]["image-gif"]')
+
+          escape_sed() {
+              echo "$1" | sed -e 's/[\/&]/\\&/g'
+          }
+
+          # Check if templateType is not empty
+          if [ -z "$templateType" ]; then
+              echo "Template type is missing or invalid."
+              exit 1
+          fi
+          
+          # Determine which template to use
+          if [ "$templateType" -eq 1 ]; then
+              templateFile="template.html"
+          elif [ "$templateType" -eq 2 ]; then
+              templateFile="template2.html"
+          else
+              echo "Unknown template type: $templateType"
+              exit 1
+          fi
+
+          # Loop through each item in the dynamic array and create an HTML file
+          echo "$json_data" | jq -c '.[0].dynamic[]' | while read -r item; do
+              filename=$(echo "$item" | jq -r '.filename')
+              title=$(echo "$item" | jq -r '.title')
+              meta_description=$(echo "$item" | jq -r '.["meta-description"]') # Use brackets for keys with hyphens
+              image_banner=$(echo "$item" | jq -r '.["image-banner"]') # Use brackets for keys with hyphens
+              content=$(echo "$item" | jq -r '.content')
+
+            # Escape the content for sed
+            escaped_content=$(escape_sed "$content")
+            
+            # Use the template to create the HTML file
+            sed -e "s/{{title}}/$title/g" \
+                -e "s/{{meta-description}}/$meta_description/g" \
+                -e "s/{{account}}/$account/g" \
+                -e "s/{{repository}}/$repository/g" \
+                -e "s|{{domainUrl}}|$domainUrl|g" \
+                -e "s/{{filename}}/$filename/g" \
+                -e "s|{{metaSource}}|$metaSource|g" \
+                -e "s|{{imageLogo}}|$imageLogo|g" \
+                -e "s|{{image-banner}}|$image_banner|g" \
+                -e "s|{{liveChatUrl}}|$liveChatUrl|g" \
+                -e "s|{{content}}|$escaped_content|g" \
+                -e "s|{{whitelabel}}|$whitelabel|g" \
+                -e "s|{{referral}}|$referral|g" \
+                -e "s|{{imageGif}}|$imageGif|g" \
+                "$templateFile" > "$filename"
+          done
+
+      - name: Commit and push changes
+        run: |
+            git config --global user.name "n00bc0d3r1"
+            git config --global user.email "darktechdenny123@gmail.com"
+            
+            # Add the generated HTML files
+            git add *.html
+            
+            # Check if there are any changes to commit
+            if git diff --cached --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "Generated HTML files from JSON"
+              git push
+            fi
+        env:
+            GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
