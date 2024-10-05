@@ -19,7 +19,7 @@ jobs:
           # Define variables
           REPO_URL="https://jokersl0t.github.io/joker/"
           INDEX_FILE="index.html"
-          HTML_FILES=$(ls *.html)
+          EXCLUDE_FILES=("index.html" "template.html" "templete2.html")
 
           # Start the index.html content
           echo '<!DOCTYPE html>' > $INDEX_FILE
@@ -40,10 +40,13 @@ jobs:
           echo '<body>' >> $INDEX_FILE
 
           # Loop through all HTML files and create anchor tags
-          for FILE in $HTML_FILES; do
-              echo "    <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
-              echo "        <p>${FILE}</p>" >> $INDEX_FILE
-              echo "    </a>" >> $INDEX_FILE
+          for FILE in *.html; do
+              # Check if the file is in the exclude list
+              if [[ ! " ${EXCLUDE_FILES[@]} " =~ " ${FILE} " ]]; then
+                  echo "    <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
+                  echo "        <p>${FILE}</p>" >> $INDEX_FILE
+                  echo "    </a>" >> $INDEX_FILE
+              fi
           done
 
           echo '</body>' >> $INDEX_FILE
