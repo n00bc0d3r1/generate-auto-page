@@ -29,12 +29,14 @@ jobs:
 
           # Loop through the HTML files to create anchor tags
           for file in $HTML_FILES; do
-            file_name=$(basename $file)
-            anchor_tags="$anchor_tags<a href=\"https://n00bc0d3r1.github.io/generate-auto-page/$file_name\"><p>$file_name</p></a>\n"
+            file_name=$(basename "$file")
+            # Use printf to handle formatting
+            anchor_tags+="<a href=\"https://n00bc0d3r1.github.io/generate-auto-page/$file_name\"><p>$file_name</p></a>\n"
           done
 
-          # Export the anchor tags as an environment variable for the next step
-          echo "ANCHOR_TAGS=\"$anchor_tags\"" >> $GITHUB_ENV
+          # Ensure proper escaping
+          anchor_tags_escaped=$(echo -n "$anchor_tags" | sed 's/"/\\"/g')
+          echo "ANCHOR_TAGS=\"$anchor_tags_escaped\"" >> $GITHUB_ENV
 
       - name: Update index.html
         run: |
@@ -42,16 +44,16 @@ jobs:
           index_file="index.html"
           
           # Separate the <head> and <body> contents
-          head_content=$(sed -n '/<head>/,/<\/head>/p' $index_file)
-          body_start=$(grep -n '<body>' $index_file | cut -d: -f1)
-          body_end=$(grep -n '</body>' $index_file | cut -d: -f1)
-          body_content=$(sed -n "$((body_start+1)),$((body_end-1))p" $index_file)
+          head_content=$(sed -n '/<head>/,/<\/head>/p' "$index_file")
+          body_start=$(grep -n '<body>' "$index_file" | cut -d: -f1)
+          body_end=$(grep -n '</body>' "$index_file" | cut -d: -f1)
+          body_content=$(sed -n "$((body_start+1)),$((body_end-1))p" "$index_file")
           
           # Inject the new anchor tags in the body
           new_body_content="<body>\n$ANCHOR_TAGS</body>"
           
           # Reconstruct the updated index.html
-          echo -e "$head_content\n$new_body_content\n</html>" > $index_file
+          echo -e "$head_content\n$new_body_content\n</html>" > "$index_file"
 
       - name: Commit and push changes
         run: |
@@ -59,13 +61,13 @@ jobs:
             git config --global user.email "darktechdenny123@gmail.com"
             
             # Add the generated HTML files
-            git add *.html
+            git add index.html
             
             # Check if there are any changes to commit
             if git diff --cached --quiet; then
               echo "No changes to commit"
             else
-              git commit -m "Generated HTML files from JSON"
+              git commit -m "Updated index.html with new anchor tags"
               git push
             fi
         env:
