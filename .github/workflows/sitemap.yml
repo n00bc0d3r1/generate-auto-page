@@ -16,54 +16,62 @@ jobs:
 
       - name: Update index.html
         run: |
-            # Define variables
-            REPO_URL="https://n00bc0d3r1.github.io/generate-auto-page/"
-            INDEX_FILE="index.html"
-            EXCLUDE_FILES=("index.html" "template.html" "template2.html")
-      
-            # Start the index.html content
-            echo '<!DOCTYPE html>' > $INDEX_FILE
-            echo '<html lang="en">' >> $INDEX_FILE
-            echo '<head>' >> $INDEX_FILE
-            echo '    <meta charset="UTF-8">' >> $INDEX_FILE
-            echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> $INDEX_FILE
-            echo '    <title>Document</title>' >> $INDEX_FILE
-            echo '    <!-- Google tag (gtag.js) -->' >> $INDEX_FILE
-            echo '    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYM2HYL2Z2"></script>' >> $INDEX_FILE
-            echo '    <script>' >> $INDEX_FILE
-            echo '        window.dataLayer = window.dataLayer || [];' >> $INDEX_FILE
-            echo '        function gtag() { dataLayer.push(arguments); }' >> $INDEX_FILE
-            echo '        gtag("js", new Date());' >> $INDEX_FILE
-            echo '        gtag("config", "G-DYM2HYL2Z2");' >> $INDEX_FILE
-            echo '    </script>' >> $INDEX_FILE
-            echo '    <style>' >> $INDEX_FILE
-            echo '        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }' >> $INDEX_FILE
-            echo '        h1 { text-align: center; color: #333; }' >> $INDEX_FILE
-            echo '        .container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; }' >> $INDEX_FILE
-            echo '        .item { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); transition: transform 0.2s; }' >> $INDEX_FILE
-            echo '        .item:hover { transform: translateY(-5px); }' >> $INDEX_FILE
-            echo '        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }' >> $INDEX_FILE
-            echo '    </style>' >> $INDEX_FILE
-            echo '</head>' >> $INDEX_FILE
-            echo '<body>' >> $INDEX_FILE
-            echo '    <h1>Welcome</h1>' >> $INDEX_FILE
-            echo '    <div class="container">' >> $INDEX_FILE
-      
-            # Loop through all HTML files and create anchor tags
-            for FILE in *.html; do
-                # Check if the file is in the exclude list
-                if [[ ! " ${EXCLUDE_FILES[@]} " =~ " ${FILE} " ]]; then
-                    echo "        <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
-                    echo "            <div class=\"item\">" >> $INDEX_FILE
-                    echo "                <p>${FILE}</p>" >> $INDEX_FILE
-                    echo "            </div>" >> $INDEX_FILE
-                    echo "        </a>" >> $INDEX_FILE
-                fi
-            done
-      
-            echo '    </div>' >> $INDEX_FILE
-            echo '</body>' >> $INDEX_FILE
-            echo '</html>' >> $INDEX_FILE
+          # Define variables
+          REPO_URL="https://n00bc0d3r1.github.io/generate-auto-page/"
+          INDEX_FILE="index.html"
+          EXCLUDE_FILES=("index.html" "template.html" "template2.html")
+          
+          # Image URL
+          IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
+
+          # Function to format filename
+          format_filename() {
+              local filename="$1"
+              # Remove the .html extension
+              filename="${filename%.html}"
+              # Replace dashes with spaces and capitalize each word
+              filename="$(echo $filename | sed 's/-/ /g; s/\b\(.\)/\U\1/g')"
+              echo "$filename"
+          }
+
+          # Start the index.html content
+          echo '<!DOCTYPE html>' > $INDEX_FILE
+          echo '<html lang="en">' >> $INDEX_FILE
+          echo '<head>' >> $INDEX_FILE
+          echo '    <meta charset="UTF-8">' >> $INDEX_FILE
+          echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> $INDEX_FILE
+          echo '    <title>Document</title>' >> $INDEX_FILE
+          echo '    <!-- Google tag (gtag.js) -->' >> $INDEX_FILE
+          echo '    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYM2HYL2Z2"></script>' >> $INDEX_FILE
+          echo '    <script>' >> $INDEX_FILE
+          echo '        window.dataLayer = window.dataLayer || [];' >> $INDEX_FILE
+          echo '        function gtag() { dataLayer.push(arguments); }' >> $INDEX_FILE
+          echo '        gtag("js", new Date());' >> $INDEX_FILE
+          echo '        gtag("config", "G-DYM2HYL2Z2");' >> $INDEX_FILE
+          echo '    </script>' >> $INDEX_FILE
+          echo '</head>' >> $INDEX_FILE
+          echo '<body>' >> $INDEX_FILE
+          echo '    <h1>Welcome</h1>' >> $INDEX_FILE
+          echo '    <div class="container">' >> $INDEX_FILE
+
+          # Loop through all HTML files and create anchor tags
+          for FILE in *.html; do
+              # Check if the file is in the exclude list
+              if [[ ! " ${EXCLUDE_FILES[@]} " =~ " ${FILE} " ]]; then
+                  # Format the filename for display
+                  DISPLAY_NAME=$(format_filename "$FILE")
+                  echo "        <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
+                  echo "            <div class=\"item\">" >> $INDEX_FILE
+                  echo "                <img src=\"${IMAGE_URL}\" alt=\"${FILE}\">" >> $INDEX_FILE
+                  echo "                <p>${DISPLAY_NAME}</p>" >> $INDEX_FILE
+                  echo "            </div>" >> $INDEX_FILE
+                  echo "        </a>" >> $INDEX_FILE
+              fi
+          done
+
+          echo '    </div>' >> $INDEX_FILE
+          echo '</body>' >> $INDEX_FILE
+          echo '</html>' >> $INDEX_FILE
       
       - name: Commit and push changes
         run: |
