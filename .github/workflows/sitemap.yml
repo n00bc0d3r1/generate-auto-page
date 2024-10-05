@@ -20,9 +20,7 @@ jobs:
           REPO_URL="https://n00bc0d3r1.github.io/generate-auto-page/"
           INDEX_FILE="index.html"
           JSON_FILE="index.json"
-          
-          # Image URL placeholder
-          IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
+          EXCLUDE_FILES=("index.html" "template.html" "template2.html")
 
           # Start the index.html content
           echo '<!DOCTYPE html>' > $INDEX_FILE
@@ -53,19 +51,21 @@ jobs:
           echo '    <h1>Welcome</h1>' >> $INDEX_FILE
           echo '    <div class="container">' >> $INDEX_FILE
 
-          # Parse JSON and create anchor tags
-          # Using jq to parse JSON
-          for row in $(jq -c '.[]' $JSON_FILE); do
-              FILENAME=$(echo $row | jq -r '.filename')
-              TITLE=$(echo $row | jq -r '.title')
-              IMAGE=$(echo $row | jq -r '.image')
-              
-              echo "        <a href=\"${REPO_URL}${FILENAME}\">" >> $INDEX_FILE
-              echo "            <div class=\"item\">" >> $INDEX_FILE
-              echo "                <img src=\"${IMAGE}\" alt=\"${FILENAME}\">" >> $INDEX_FILE
-              echo "                <p>${TITLE}</p>" >> $INDEX_FILE
-              echo "            </div>" >> $INDEX_FILE
-              echo "        </a>" >> $INDEX_FILE
+          # Read index.json and create anchor tags
+          jq -c '.[]' $JSON_FILE | while read -r item; do
+              FILENAME=$(echo $item | jq -r '.filename')
+              TITLE=$(echo $item | jq -r '.title')
+              IMAGE=$(echo $item | jq -r '.image')
+
+              # Check if the file is in the exclude list
+              if [[ ! " ${EXCLUDE_FILES[@]} " =~ " ${FILENAME} " ]]; then
+                  echo "        <a href=\"${REPO_URL}${FILENAME}\">" >> $INDEX_FILE
+                  echo "            <div class=\"item\">" >> $INDEX_FILE
+                  echo "                <img src=\"${IMAGE}\" alt=\"${TITLE}\">" >> $INDEX_FILE
+                  echo "                <p>${TITLE}</p>" >> $INDEX_FILE
+                  echo "            </div>" >> $INDEX_FILE
+                  echo "        </a>" >> $INDEX_FILE
+              fi
           done
 
           echo '    </div>' >> $INDEX_FILE
