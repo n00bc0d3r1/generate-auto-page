@@ -17,7 +17,7 @@ jobs:
       - name: Update index.html
         run: |
           # Define variables
-          REPO_URL="https://jokersl0t.github.io/joker/"
+          REPO_URL="https://n00bc0d3r1.github.io/generate-auto-page/"
           INDEX_FILE="index.html"
           EXCLUDE_FILES=("index.html" "template.html" "template2.html")
 
