@@ -19,20 +19,10 @@ jobs:
           # Define variables
           REPO_URL="https://n00bc0d3r1.github.io/generate-auto-page/"
           INDEX_FILE="index.html"
-          EXCLUDE_FILES=("index.html" "template.html" "template2.html")
+          JSON_FILE="index.json"
           
-          # Image URL
+          # Image URL placeholder
           IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png"
-
-          # Function to format filename
-          format_filename() {
-              local filename="$1"
-              # Remove the .html extension
-              filename="${filename%.html}"
-              # Replace dashes with spaces and capitalize each word
-              filename="$(echo $filename | sed 's/-/ /g; s/\b\(.\)/\U\1/g')"
-              echo "$filename"
-          }
 
           # Start the index.html content
           echo '<!DOCTYPE html>' > $INDEX_FILE
@@ -63,19 +53,19 @@ jobs:
           echo '    <h1>Welcome</h1>' >> $INDEX_FILE
           echo '    <div class="container">' >> $INDEX_FILE
 
-          # Loop through all HTML files and create anchor tags
-          for FILE in *.html; do
-              # Check if the file is in the exclude list
-              if [[ ! " ${EXCLUDE_FILES[@]} " =~ " ${FILE} " ]]; then
-                  # Format the filename for display
-                  DISPLAY_NAME=$(format_filename "$FILE")
-                  echo "        <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
-                  echo "            <div class=\"item\">" >> $INDEX_FILE
-                  echo "                <img src=\"${IMAGE_URL}\" alt=\"${FILE}\">" >> $INDEX_FILE
-                  echo "                <p>${DISPLAY_NAME}</p>" >> $INDEX_FILE
-                  echo "            </div>" >> $INDEX_FILE
-                  echo "        </a>" >> $INDEX_FILE
-              fi
+          # Parse JSON and create anchor tags
+          # Using jq to parse JSON
+          for row in $(jq -c '.[]' $JSON_FILE); do
+              FILENAME=$(echo $row | jq -r '.filename')
+              TITLE=$(echo $row | jq -r '.title')
+              IMAGE=$(echo $row | jq -r '.image')
+              
+              echo "        <a href=\"${REPO_URL}${FILENAME}\">" >> $INDEX_FILE
+              echo "            <div class=\"item\">" >> $INDEX_FILE
+              echo "                <img src=\"${IMAGE}\" alt=\"${FILENAME}\">" >> $INDEX_FILE
+              echo "                <p>${TITLE}</p>" >> $INDEX_FILE
+              echo "            </div>" >> $INDEX_FILE
+              echo "        </a>" >> $INDEX_FILE
           done
 
           echo '    </div>' >> $INDEX_FILE
