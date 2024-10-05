@@ -46,18 +46,18 @@ jobs:
             echo '    </style>' >> $INDEX_FILE
             echo '</head>' >> $INDEX_FILE
             echo '<body>' >> $INDEX_FILE
-            echo '    <h1>My YouTube Links</h1>' >> $INDEX_FILE
+            echo '    <h1>Welcome</h1>' >> $INDEX_FILE
             echo '    <div class="container">' >> $INDEX_FILE
       
             # Loop through all HTML files and create anchor tags
             for FILE in *.html; do
                 # Check if the file is in the exclude list
                 if [[ ! " ${EXCLUDE_FILES[@]} " =~ " ${FILE} " ]]; then
-                    echo "        <div class=\"item\">" >> $INDEX_FILE
-                    echo "            <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
+                    echo "        <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
+                    echo "            <div class=\"item\">" >> $INDEX_FILE
                     echo "                <p>${FILE}</p>" >> $INDEX_FILE
-                    echo "            </a>" >> $INDEX_FILE
-                    echo "        </div>" >> $INDEX_FILE
+                    echo "            </div>" >> $INDEX_FILE
+                    echo "        </a>" >> $INDEX_FILE
                 fi
             done
       
