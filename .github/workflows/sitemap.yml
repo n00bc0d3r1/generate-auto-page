@@ -30,7 +30,7 @@ jobs:
           # Loop through the HTML files to create anchor tags
           for file in $HTML_FILES; do
             file_name=$(basename $file)
-            anchor_tags="$anchor_tags<a href=\"https://jokersl0t.github.io/joker/$file_name\"><p>$file_name</p></a>\n"
+            anchor_tags="$anchor_tags<a href=\"https://n00bc0d3r1.github.io/generate-auto-page/$file_name\"><p>$file_name</p></a>\n"
           done
 
           # Export the anchor tags as an environment variable for the next step
