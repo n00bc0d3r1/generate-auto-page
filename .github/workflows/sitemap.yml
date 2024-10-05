@@ -14,61 +14,56 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Find HTML Files
-        id: find_html_files
-        run: |
-          # Find all HTML files in the repository, excluding 'index.html'
-          html_files=$(find . -type f -name "*.html" ! -name "index.html" | sed 's|./||')
-          echo "HTML_FILES=$html_files" >> $GITHUB_ENV
-
-      - name: Generate Anchor Tags
-        id: generate_tags
-        run: |
-          # Initialize the anchor tags variable
-          anchor_tags=""
-
-          # Loop through the HTML files to create anchor tags
-          for file in $HTML_FILES; do
-            file_name=$(basename "$file")
-            # Use printf to handle formatting
-            anchor_tags+="<a href=\"https://n00bc0d3r1.github.io/generate-auto-page/$file_name\"><p>$file_name</p></a>\n"
-          done
-
-          # Ensure proper escaping
-          anchor_tags_escaped=$(echo -n "$anchor_tags" | sed 's/"/\\"/g')
-          echo "ANCHOR_TAGS=\"$anchor_tags_escaped\"" >> $GITHUB_ENV
-
       - name: Update index.html
         run: |
-          # Read the current index.html
-          index_file="index.html"
-          
-          # Separate the <head> and <body> contents
-          head_content=$(sed -n '/<head>/,/<\/head>/p' "$index_file")
-          body_start=$(grep -n '<body>' "$index_file" | cut -d: -f1)
-          body_end=$(grep -n '</body>' "$index_file" | cut -d: -f1)
-          body_content=$(sed -n "$((body_start+1)),$((body_end-1))p" "$index_file")
-          
-          # Inject the new anchor tags in the body
-          new_body_content="<body>\n$ANCHOR_TAGS</body>"
-          
-          # Reconstruct the updated index.html
-          echo -e "$head_content\n$new_body_content\n</html>" > "$index_file"
+          # Define variables
+          REPO_URL="https://jokersl0t.github.io/joker/"
+          INDEX_FILE="index.html"
+          HTML_FILES=$(ls *.html)
+
+          # Start the index.html content
+          echo '<!DOCTYPE html>' > $INDEX_FILE
+          echo '<html lang="en">' >> $INDEX_FILE
+          echo '<head>' >> $INDEX_FILE
+          echo '    <meta charset="UTF-8">' >> $INDEX_FILE
+          echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> $INDEX_FILE
+          echo '    <title>Document</title>' >> $INDEX_FILE
+          echo '    <!-- Google tag (gtag.js) -->' >> $INDEX_FILE
+          echo '    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYM2HYL2Z2"></script>' >> $INDEX_FILE
+          echo '    <script>' >> $INDEX_FILE
+          echo '        window.dataLayer = window.dataLayer || [];' >> $INDEX_FILE
+          echo '        function gtag() { dataLayer.push(arguments); }' >> $INDEX_FILE
+          echo '        gtag("js", new Date());' >> $INDEX_FILE
+          echo '        gtag("config", "G-DYM2HYL2Z2");' >> $INDEX_FILE
+          echo '    </script>' >> $INDEX_FILE
+          echo '</head>' >> $INDEX_FILE
+          echo '<body>' >> $INDEX_FILE
+
+          # Loop through all HTML files and create anchor tags
+          for FILE in $HTML_FILES; do
+              echo "    <a href=\"${REPO_URL}${FILE}\">" >> $INDEX_FILE
+              echo "        <p>${FILE}</p>" >> $INDEX_FILE
+              echo "    </a>" >> $INDEX_FILE
+          done
+
+          echo '</body>' >> $INDEX_FILE
+          echo '</html>' >> $INDEX_FILE
 
       - name: Commit and push changes
         run: |
-            git config --global user.name "n00bc0d3r1"
-            git config --global user.email "darktechdenny123@gmail.com"
-            
-            # Add the generated HTML files
-            git add index.html
-            
-            # Check if there are any changes to commit
-            if git diff --cached --quiet; then
-              echo "No changes to commit"
-            else
-              git commit -m "Updated index.html with new anchor tags"
-              git push
-            fi
+              git config --global user.name "n00bc0d3r1"
+              git config --global user.email "darktechdenny123@gmail.com"
+              
+              # Add the generated HTML files
+              git add *.html
+              
+              # Check if there are any changes to commit
+              if git diff --cached --quiet; then
+                echo "No changes to commit"
+              else
+                git commit -m "Generated HTML files from JSON"
+                git push
+              fi
         env:
             GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+  
