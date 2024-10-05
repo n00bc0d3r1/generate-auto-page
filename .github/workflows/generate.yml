@@ -1,4 +1,4 @@
-name: Create HTML Files from JSON
+name: Generate Workflow
 
 on:
   push:
