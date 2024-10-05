@@ -19,7 +19,7 @@ jobs:
           # Define variables
           REPO_URL="https://jokersl0t.github.io/joker/"
           INDEX_FILE="index.html"
-          EXCLUDE_FILES=("index.html" "template.html" "templete2.html")
+          EXCLUDE_FILES=("index.html" "template.html" "template2.html")
 
           # Start the index.html content
           echo '<!DOCTYPE html>' > $INDEX_FILE
